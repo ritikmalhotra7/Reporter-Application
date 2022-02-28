@@ -77,7 +77,6 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
                     val newList = resultResponse.articles
                     oldList.addAll(newList)
                 }
-
                 return Resources.Success(searchNewsResponse ?: resultResponse)
             }
         }

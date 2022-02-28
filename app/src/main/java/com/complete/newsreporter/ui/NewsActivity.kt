@@ -25,7 +25,6 @@ class NewsActivity : AppCompatActivity() {
         val viewModelFactory = NewsViewModelProviderFactory(application,repository)
         newsViewModel = ViewModelProvider(this,viewModelFactory).get(NewsViewModel::class.java)
 
-
         bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController())
     }
 }
