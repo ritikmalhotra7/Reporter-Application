@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/news_nav_graph.xml"
     app:startDestination="@id/breakingNewsFragment">
 
@@ -39,16 +40,26 @@
             app:popEnterAnim="@anim/slide_in_left"/>
     </fragment>
     <fragment
+        android:id="@+id/sosFragment"
+        android:name="com.complete.newsreporter.ui.SosFragment"
+        android:label="fragment_sos"
+        tools:layout="@layout/fragment_sos" />
+    <fragment
+        android:id="@+id/tvFragment"
+        android:name="com.complete.newsreporter.ui.TvFragment"
+        android:label="fragment_tv"
+        tools:layout="@layout/fragment_tv" />
+    <fragment
         android:id="@+id/searchNewsFragment"
         android:name="com.complete.newsreporter.ui.SearchNewsFragment"
         android:label="SearchNewsFragment" >
         <action
             android:id="@+id/action_searchNewsFragment_to_articleFragment"
-            app:destination="@id/articleFragment"
-
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popExitAnim="@anim/slide_out_right"
-            app:popEnterAnim="@anim/slide_in_left"/>
+            app:destination="@id/articleFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/watchTvFragment"
+        android:name="com.complete.newsreporter.ui.WatchTvFragment"
+        android:label="fragment_tv"
+        tools:layout="@layout/fragment_tv" />
 </navigation>

@@ -2,7 +2,9 @@ package com.complete.newsreporter.ui
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
@@ -10,9 +12,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
 import com.complete.newsreporter.R
 import com.complete.newsreporter.adapter.NewsAdapter
+import com.complete.newsreporter.databinding.FragmentBreakingNewsBinding
+import com.complete.newsreporter.databinding.FragmentSearchNewsBinding
 import com.complete.newsreporter.ui.NewsViewModel
 import com.complete.newsreporter.utils.Constants
 import com.complete.newsreporter.utils.Resources
@@ -26,7 +32,76 @@ import kotlinx.coroutines.launch
 class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     private lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter : NewsAdapter
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    private var _binding: FragmentSearchNewsBinding? = null
+    val binding : FragmentSearchNewsBinding get() = _binding!!
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchNewsBinding.inflate(inflater,container,false)
+        viewModel = (activity as NewsActivity).newsViewModel
+        newsAdapter = NewsAdapter(requireActivity())
+        binding.rvSearchNews.apply {
+            adapter = newsAdapter
+            layoutManager = LinearLayoutManager(activity)
+            addOnScrollListener(this@SearchNewsFragment.scrollListener)
+
+        }
+        val helper: SnapHelper = LinearSnapHelper()
+        helper.attachToRecyclerView(binding.rvSearchNews)
+
+        newsAdapter.setOnClickListener {article->
+            val bundle = Bundle().apply {
+                putSerializable("article",article)
+            }
+            findNavController().navigate(
+                R.id.action_searchNewsFragment_to_articleFragment,
+                bundle
+            )
+        }
+        var job : Job? = null
+        binding.etSearch.addTextChangedListener { editable ->
+            job?.cancel()
+            job = MainScope().launch {
+                delay(500L)
+                editable?.let {
+                    if(editable.toString().isNotEmpty()){
+                        viewModel.getSearchedNews(editable.toString())
+                    }
+                }
+            }
+        }
+
+        viewModel.searchedQuery.observe(viewLifecycleOwner, Observer{response->
+            when(response){
+                is Resources.Success ->{
+                    hideProgressBar()
+                    response.data?.let {newsResponse ->
+                        newsAdapter.differ.submitList(newsResponse.articles.toList())
+                        val totalPages = newsResponse.totalResults/ Constants.QUERY_SIZE + 2
+                        isLastPage = totalPages == viewModel.searchedPageNumber
+                        if(isLastPage){
+                            rvSearchNews.setPadding(0,0,0,0)
+                        }
+
+                    }
+                }
+                is Resources.Error ->{
+                    hideProgressBar()
+                    response.data?.let{
+                        Toast.makeText(activity,"An Error occured $it", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Resources.Loading ->{
+                    showProgressBar()
+                }
+            }
+        })
+        return binding.root
+
+    }
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as NewsActivity).newsViewModel
         setUpRecyclerView()
@@ -40,6 +115,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                 bundle
             )
         }
+
 
         var job : Job? = null
         etSearch.addTextChangedListener { editable ->
@@ -80,7 +156,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             }
         })
 
-    }
+    }*/
     var isLoading = false
     var isLastPage = false
     var isScrolling = false
@@ -122,13 +198,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         isLoading = true
     }
     private fun setUpRecyclerView(){
-        newsAdapter = NewsAdapter()
-        rvSearchNews.apply {
-            adapter = newsAdapter
-            layoutManager = LinearLayoutManager(activity)
-            addOnScrollListener(this@SearchNewsFragment.scrollListener)
 
-        }
 
     }
 }

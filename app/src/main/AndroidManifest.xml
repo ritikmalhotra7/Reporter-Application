@@ -12,10 +12,11 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_news"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NewsReporter">
+        android:theme="@style/Theme.AppReporter">
         <activity
             android:name=".ui.NewsActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppReporter.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

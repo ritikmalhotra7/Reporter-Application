@@ -1,18 +1,24 @@
 package com.complete.newsreporter.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.renderscript.ScriptGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.load
+import coil.transform.BlurTransformation
+import coil.transform.GrayscaleTransformation
+import coil.transform.RoundedCornersTransformation
+import com.complete.newsreporter.R
 import com.complete.newsreporter.databinding.ItemArticlePreviewBinding
 import com.complete.newsreporter.model.Article
 import kotlinx.android.synthetic.main.item_article_preview.view.*
 
-class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter(val ctx:Context) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
     inner class ArticleViewHolder(val binding: ItemArticlePreviewBinding):RecyclerView.ViewHolder(binding.root) {
 
     }
@@ -36,12 +42,26 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
         val currentArticle = differ.currentList[position]
 
         holder.binding.root.apply{
-            Glide.with(this).load(currentArticle.urlToImage).into(ivArticleImage)
+            ivArticleImage.load(currentArticle.urlToImage){
+                transformations(RoundedCornersTransformation(20F))
+                placeholder(R.drawable.ic_news)
+                crossfade(1000)
+            }
+
+            iv_share.setOnClickListener(View.OnClickListener {
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.putExtra(Intent.EXTRA_TEXT,"Hey, checkout this news : "+currentArticle.url)
+                intent.type = "text/plain"
+                context.startActivity(Intent.createChooser(intent,"Share with :"))
+
+            })
             tvSource.text = currentArticle.source?.name
             tvTitle.text = currentArticle.title
             tvDescription.text = currentArticle.description
-            tvPublishedAt.text = currentArticle.publishedAt
-
+            tvPublishedAt.text = currentArticle.publishedAt!!.split("T")[0]+"  "+
+                    currentArticle.publishedAt!!.split("T")[1].substring(0,currentArticle.publishedAt!!.split("T")[1].length-1)
+            tvUrl.text = currentArticle.url
             setOnClickListener{
                 onItemClickListener?.let {
                     it(currentArticle)
