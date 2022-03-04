@@ -1,6 +1,7 @@
 package com.complete.newsreporter.api
 
 import com.complete.newsreporter.model.NewsResponse
+import com.complete.newsreporter.modelX.SosResponse
 import com.complete.newsreporter.utils.Constants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
@@ -26,4 +27,6 @@ interface NewsApi {
         @Query("apiKey")
         apiKey:String=API_KEY
     ): Response<NewsResponse>
+    @GET("https://emergencynumberapi.com/api/country/in")
+    suspend fun getNumber() : Response<SosResponse>
 }

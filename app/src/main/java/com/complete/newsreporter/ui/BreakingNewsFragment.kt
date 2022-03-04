@@ -30,8 +30,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     lateinit var viewModel:NewsViewModel
     lateinit var newsAdapter : NewsAdapter
     private var _binding: FragmentBreakingNewsBinding? = null
-    val binding : FragmentBreakingNewsBinding get() = _binding!!
-    private var rootView: View? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

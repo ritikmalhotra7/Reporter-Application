@@ -14,9 +14,9 @@
     <item android:id="@+id/sosFragment"
         android:title="SOS"
         android:icon="@drawable/icons8_sos"/>
-    <item android:id="@+id/savedNewsFragment"
-        android:title="Liked News"
-        android:icon="@drawable/icons8_heart"/>
+    <item android:id="@+id/settingFragment"
+        android:title="Settings"
+        android:icon="@drawable/icons8_settings"/>
 
 
 </menu>

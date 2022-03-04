@@ -83,6 +83,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="settingFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-12" />
+                            <option name="y" value="-1021" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="sosFragment">
                     <value>
                       <LayoutPositions>

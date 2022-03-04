@@ -71,4 +71,9 @@
             app:argType="string"
             android:defaultValue="/" />
     </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.complete.newsreporter.ui.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

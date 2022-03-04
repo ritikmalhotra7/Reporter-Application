@@ -14,6 +14,7 @@ import com.complete.newsreporter.NewsApplication
 import com.complete.newsreporter.database.NewsRepository
 import com.complete.newsreporter.model.Article
 import com.complete.newsreporter.model.NewsResponse
+import com.complete.newsreporter.modelX.SosResponse
 import com.complete.newsreporter.utils.Resources
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -22,12 +23,28 @@ import java.io.IOException
 class NewsViewModel (app: Application,val repository: NewsRepository):AndroidViewModel(app){
     val breakingNews:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
     val searchedQuery:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
+    val numberReponse:MutableLiveData<Resources<SosResponse>> = MutableLiveData()
+
     var breakingNewsPage = 1
     var searchedPageNumber = 1
     var breakingNewsResponse: NewsResponse? =null
     var searchNewsResponse: NewsResponse? =null
     init{
         getBreakingNews("in")
+    }
+    fun getNumber() = viewModelScope.launch {
+        numberReponse.postValue(Resources.Loading())
+        val numbers = repository.getNumber()
+        numberReponse.postValue(handleSosReponse(numbers))
+    }
+
+    private fun handleSosReponse(response: Response<SosResponse>):Resources<SosResponse>{
+        if(response.isSuccessful){
+            response.body()?.let{ resultResponse->
+                return Resources.Success(resultResponse)
+            }
+        }
+        return Resources.Error(response.message())
     }
 
     fun getBreakingNews(countryCode:String) = viewModelScope.launch {

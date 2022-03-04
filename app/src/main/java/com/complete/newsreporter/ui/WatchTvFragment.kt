@@ -22,11 +22,11 @@ class WatchTvFragment : Fragment(R.layout.fragment_watch_tv) {
         savedInstanceState: Bundle?
     ): View? {
         val b = FragmentWatchTvBinding.inflate(inflater)
-        Log.d("taget","Entered")
+        Log.d("taget",args.urlToWebsite)
         val url = args.urlToWebsite
         b.webView.apply {
             webViewClient = WebViewClient()
-            loadUrl("https://www.ndtv.com/video/live/channel/ndtv24x7")
+            loadUrl(url)
             Log.d("taget","this")
         }
         return b.root
