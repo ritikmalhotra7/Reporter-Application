@@ -1,6 +1,9 @@
 package com.complete.newsreporter.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,11 +51,13 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         }
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer{response->
+            Log.d("taget",response.data?.articles?.size.toString())
              when(response){
                  is Resources.Success ->{
                      hideProgressBar()
                      response.data?.let {newsResponse ->  
                          newsAdapter.differ.submitList(newsResponse.articles.toList())
+                         Log.d("taget",newsResponse.articles.size.toString())
                          val totalPages = newsResponse.totalResults/ QUERY_SIZE + 2
                          isLastPage = totalPages == viewModel.breakingNewsPage
                          if(isLastPage){
@@ -65,6 +70,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                      hideProgressBar()
                      response.data?.let{
                          Toast.makeText(activity,"An Error occured $it",Toast.LENGTH_SHORT).show()
+                         Log.d("taget","Something is wrong")
                      }
                  }
                  is Resources.Loading ->{
@@ -75,11 +81,11 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     }
     private fun hideProgressBar(){
-        paginationProgressBarBreaking.visibility = View.INVISIBLE
+        avi.hide()
         isLoading = false
     }
     private fun showProgressBar(){
-        paginationProgressBarBreaking.visibility = View.VISIBLE
+        avi.show()
         isLoading = true
     }
 
@@ -125,7 +131,5 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             val helper: SnapHelper = LinearSnapHelper()
             helper.attachToRecyclerView(this)
         }
-
-
     }
 }

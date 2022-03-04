@@ -48,7 +48,11 @@
         android:id="@+id/tvFragment"
         android:name="com.complete.newsreporter.ui.TvFragment"
         android:label="fragment_tv"
-        tools:layout="@layout/fragment_tv" />
+        tools:layout="@layout/fragment_tv" >
+        <action
+            android:id="@+id/action_tvFragment_to_watchTvFragment"
+            app:destination="@id/watchTvFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchNewsFragment"
         android:name="com.complete.newsreporter.ui.SearchNewsFragment"
@@ -61,5 +65,10 @@
         android:id="@+id/watchTvFragment"
         android:name="com.complete.newsreporter.ui.WatchTvFragment"
         android:label="fragment_tv"
-        tools:layout="@layout/fragment_tv" />
+        tools:layout="@layout/fragment_tv" >
+        <argument
+            android:name="urlToWebsite"
+            app:argType="string"
+            android:defaultValue="/" />
+    </fragment>
 </navigation>

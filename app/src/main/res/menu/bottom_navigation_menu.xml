@@ -9,6 +9,8 @@
     <item android:id="@+id/tvFragment"
         android:title="Watch News"
         android:icon="@drawable/icons8_tv_1"/>
+    <item android:id="@+id/a"
+        android:title=""/>
     <item android:id="@+id/sosFragment"
         android:title="SOS"
         android:icon="@drawable/icons8_sos"/>

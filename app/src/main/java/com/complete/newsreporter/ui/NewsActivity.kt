@@ -3,6 +3,7 @@ package com.complete.newsreporter.ui
 import android.app.PendingIntent.getActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
@@ -31,11 +32,19 @@ class NewsActivity : AppCompatActivity() {
         val viewModelFactory = NewsViewModelProviderFactory(application,repository)
         newsViewModel = ViewModelProvider(this,viewModelFactory).get(NewsViewModel::class.java)
         /*bottomNavigationView.background = null*/
-
+        bottomNavigationView.background = null
+        bottomNavigationView.menu.get(2).isEnabled = false
+        newsNavHostFragment.findNavController().navigate(R.id.breakingNewsFragment)
         bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController())
         binding.fab.setOnClickListener {
            newsNavHostFragment.findNavController().navigate(R.id.searchNewsFragment)
         }
+        /*bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.breakingNewsFragment -> newsNavHostFragment.findNavController().navigate()
+            }
+            true
+        }*/
        /* setCurrentFragment(BreakingNewsFragment())
         binding.fab.setOnClickListener {
             setCurrentFragment(SearchNewsFragment())
@@ -62,12 +71,12 @@ class NewsActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)*/
     }
-    private fun setCurrentFragment(fragment : Fragment) {
+    private fun setCurrentFragment(fragment : Fragment) : Boolean {
         supportFragmentManager.beginTransaction().apply {
-
-            replace(R.id.flFragment,fragment)
+            replace(R.id.newsNavHostFragment,fragment)
             commit()
         }
         Log.d("taget","hogya change")
+        return true
     }
 }

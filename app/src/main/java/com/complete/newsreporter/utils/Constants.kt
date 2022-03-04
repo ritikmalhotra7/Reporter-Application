@@ -7,7 +7,7 @@ class Constants {
         const val QUERY_SIZE = 20
 
         const val ABP_NEWS = "https://www.abplive.com/live-tv"
-        const val NDTV_NEWS = "https://ndtv.in/livetv-ndtvindia"
+        const val NDTV_NEWS = "https://www.ndtv.com/video/live/channel/ndtv24x7"
         const val INDIA_TODAY_NEWS = "https://www.indiatoday.in/livetv"
         const val AAJ_TAK = "https://www.indiatoday.in/aajtak-livetv"
         const val GNT_NEWS = "https://www.indiatoday.in/gnt-livetv"

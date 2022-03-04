@@ -79,4 +79,7 @@ dependencies {
     //Coil
     implementation("io.coil-kt:coil:1.4.0")
 
+    //ProgressBar
+    implementation('com.wang.avi:library:2.1.3')
+
 }

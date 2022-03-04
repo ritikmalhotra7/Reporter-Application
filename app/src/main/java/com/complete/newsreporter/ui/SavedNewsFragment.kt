@@ -62,6 +62,12 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
         viewModel.getSavedNews().observe(viewLifecycleOwner, Observer{
             newsAdapter.differ.submitList(it)
+            if(it.size == 0){
+                tvBg.visibility = View.VISIBLE
+            }else{
+                tvBg.visibility = View.INVISIBLE
+            }
+
         })
     }
     private fun setUpRecyclerView(){
