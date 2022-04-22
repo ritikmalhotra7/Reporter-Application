@@ -6,6 +6,7 @@ import android.net.ConnectivityManager
 import android.net.ConnectivityManager.*
 import android.net.NetworkCapabilities.*
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,7 +23,7 @@ import java.io.IOException
 
 class NewsViewModel (app: Application,val repository: NewsRepository):AndroidViewModel(app){
     val breakingNews:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
-    val searchedQuery:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
+    var searchedQuery:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
     val numberReponse:MutableLiveData<Resources<SosResponse>> = MutableLiveData()
 
     var breakingNewsPage = 1
@@ -31,6 +32,7 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
     var searchNewsResponse: NewsResponse? =null
     init{
         getBreakingNews("in")
+        getSearchedNews("headlines")
     }
     fun getNumber() = viewModelScope.launch {
         numberReponse.postValue(Resources.Loading())
@@ -66,10 +68,10 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
     private fun handleBreakingNewsResponse(response:Response<NewsResponse>):Resources<NewsResponse>{
         if(response.isSuccessful){
             response.body()?.let{ resultResponse->
-                breakingNewsPage++
                 if(breakingNewsResponse == null){
                     breakingNewsResponse = resultResponse
                 }else{
+                    breakingNewsPage++;
                     val oldList = breakingNewsResponse!!.articles
                     val newList = resultResponse.articles
                     oldList.addAll(newList)
@@ -78,7 +80,8 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
                 // breakingNewsResponse ?: resultResponse = this indicates that if
                 // breakingNewsRespponse is not null then it will be returned and
                 // if its null then only resultResponse is returned
-                return Resources.Success(breakingNewsResponse ?: resultResponse)
+                return Resources.Success(breakingNewsResponse!! )
+                //?: resultResponse
             }
         }
         return Resources.Error(response.message())
@@ -86,18 +89,43 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
     private fun handleSearchedNewsResponse(response:Response<NewsResponse>):Resources<NewsResponse>{
         if(response.isSuccessful){
             response.body()?.let{ resultResponse->
-                searchedPageNumber++
-                if(searchNewsResponse == null){
-                    searchNewsResponse = resultResponse
-                }else{
-                    val oldList = searchNewsResponse!!.articles
-                    val newList = resultResponse.articles
-                    oldList.addAll(newList)
-                }
                 return Resources.Success(searchNewsResponse ?: resultResponse)
             }
         }
         return Resources.Error(response.message())
+    }
+
+    private suspend fun safeBreakingCall(countryCode:String){
+        try{
+            if(hasConnection()){
+                val response = repository.getBreakingNews(countryCode,breakingNewsPage)
+                breakingNews.postValue(handleBreakingNewsResponse(response))
+            }else{
+                breakingNews.postValue(Resources.Error("No Internet Connection"))
+            }
+        }catch(t:Throwable){
+            when(t){
+                is IOException -> breakingNews.postValue(Resources.Error("Network Failed"))
+                else -> breakingNews.postValue(Resources.Error("conversion error"))
+            }
+        }
+    }
+    private suspend fun safeSearchCall(searchQuery:String){
+
+        searchedQuery.postValue(Resources.Loading())
+        try{
+            if(hasConnection()){
+                val response = repository.getSearchQuery(searchQuery,searchedPageNumber)
+                searchedQuery.postValue(handleSearchedNewsResponse(response))
+            }else{
+                searchedQuery.postValue(Resources.Error("No Internet Connection"))
+            }
+        }catch(t:Throwable){
+            when(t){
+                is IOException -> searchedQuery.postValue(Resources.Error("Network Failed"))
+                else -> searchedQuery.postValue(Resources.Error("conversion error"))
+            }
+        }
     }
     private fun hasConnection():Boolean{
         val connectivityManager = getApplication<NewsApplication>().getSystemService(
@@ -125,37 +153,5 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
             }
         }
         return false
-    }
-    private suspend fun safeBreakingCall(countryCode:String){
-        breakingNews.postValue(Resources.Loading())
-        try{
-            if(hasConnection()){
-                val response = repository.getBreakingNews(countryCode,breakingNewsPage)
-                breakingNews.postValue(handleBreakingNewsResponse(response))
-            }else{
-                breakingNews.postValue(Resources.Error("No Internet Connection"))
-            }
-        }catch(t:Throwable){
-            when(t){
-                is IOException -> breakingNews.postValue(Resources.Error("Network Failed"))
-                else -> breakingNews.postValue(Resources.Error("conversion error"))
-            }
-        }
-    }
-    private suspend fun safeSearchCall(searchQuery:String){
-        breakingNews.postValue(Resources.Loading())
-        try{
-            if(hasConnection()){
-                val response = repository.getSearchQuery(searchQuery,searchedPageNumber)
-                searchedQuery.postValue(handleSearchedNewsResponse(response))
-            }else{
-                searchedQuery.postValue(Resources.Error("No Internet Connection"))
-            }
-        }catch(t:Throwable){
-            when(t){
-                is IOException -> searchedQuery.postValue(Resources.Error("Network Failed"))
-                else -> searchedQuery.postValue(Resources.Error("conversion error"))
-            }
-        }
     }
 }

@@ -4,24 +4,32 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
 
     <application
         android:name=".NewsApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_news"
-        android:label="@string/app_name"
+        android:label="Pocket News"
         android:roundIcon="@drawable/ic_news"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppReporter">
         <activity
-            android:name=".ui.NewsActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.AppReporter.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.NewsActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppReporter.NoActionBar"></activity>
     </application>
 
 </manifest>

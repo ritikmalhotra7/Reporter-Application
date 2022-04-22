@@ -38,12 +38,22 @@
             app:exitAnim="@anim/slide_out_left"
             app:popExitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_left"/>
+        <action
+            android:id="@+id/action_savedNewsFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
     <fragment
         android:id="@+id/sosFragment"
         android:name="com.complete.newsreporter.ui.SosFragment"
         android:label="fragment_sos"
-        tools:layout="@layout/fragment_sos" />
+        tools:layout="@layout/fragment_sos" >
+        <action
+            android:id="@+id/action_sosFragment_to_emergencyHospitalFragment"
+            app:destination="@id/emergencyHospitalFragment" />
+        <action
+            android:id="@+id/action_sosFragment_to_emergencyFireFragment"
+            app:destination="@id/emergencyFireFragment" />
+    </fragment>
     <fragment
         android:id="@+id/tvFragment"
         android:name="com.complete.newsreporter.ui.TvFragment"
@@ -75,5 +85,37 @@
         android:id="@+id/settingFragment"
         android:name="com.complete.newsreporter.ui.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_savedNewsFragment"
+            app:destination="@id/savedNewsFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_breakingNewsFragment"
+            app:destination="@id/breakingNewsFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_loginActivity"
+            app:destination="@id/loginActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/emergencyFireFragment"
+        android:name="com.complete.newsreporter.situations_fragments.ResultFragment"
+        android:label="fragment_emergency_fire"
+        tools:layout="@layout/fragment_result" />
+    <fragment
+        android:id="@+id/emergencyHospitalFragment"
+        android:name="com.complete.newsreporter.situations_fragments.EmergenciesFragment"
+        android:label="fragment_emergency_hospital"
+        tools:layout="@layout/fragment_emergencies" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.complete.newsreporter.ui.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.complete.newsreporter.ui.LoginActivity"
+        android:label="LoginActivity" />
 </navigation>

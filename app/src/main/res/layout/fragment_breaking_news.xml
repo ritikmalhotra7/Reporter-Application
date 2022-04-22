@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvBreakingNews"
@@ -14,7 +19,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:requiresFadingEdge="vertical"
+        android:fadingEdgeLength="100dp">
+    </androidx.recyclerview.widget.RecyclerView>
 
 
     <com.wang.avi.AVLoadingIndicatorView

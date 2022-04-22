@@ -18,6 +18,7 @@ interface NewsApi {
         @Query("apiKey")
         apiKey:String=API_KEY
     ): Response<NewsResponse>
+
     @GET("v2/everything")
     suspend fun searchForNews(
         @Query("q")
@@ -27,6 +28,7 @@ interface NewsApi {
         @Query("apiKey")
         apiKey:String=API_KEY
     ): Response<NewsResponse>
+
     @GET("https://emergencynumberapi.com/api/country/in")
     suspend fun getNumber() : Response<SosResponse>
 }

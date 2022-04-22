@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.complete.newsreporter.ui.NewsActivity
 import com.complete.newsreporter.R
 import com.complete.newsreporter.adapter.NewsAdapter
+import com.complete.newsreporter.model.Article
 import com.complete.newsreporter.ui.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_breaking_news.*
@@ -24,6 +26,9 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         viewModel = (activity as NewsActivity).newsViewModel
 
         setUpRecyclerView()
+        backbutton.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.action_savedNewsFragment_to_settingFragment)
+        }
 
         newsAdapter.setOnClickListener {article->
             val bundle = Bundle().apply {
@@ -46,7 +51,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val article = newsAdapter.differ.currentList.get(position)
+                val article = newsAdapter.ls.get(position)
                 viewModel.deleteNews(article)
                 Snackbar.make(view,"Article Deleted!",Snackbar.LENGTH_LONG).apply {
                     setAction("Undo"){
@@ -61,7 +66,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         }
 
         viewModel.getSavedNews().observe(viewLifecycleOwner, Observer{
-            newsAdapter.differ.submitList(it)
+            newsAdapter.setList(it)
             if(it.size == 0){
                 tvBg.visibility = View.VISIBLE
             }else{
@@ -71,7 +76,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         })
     }
     private fun setUpRecyclerView(){
-        newsAdapter = NewsAdapter(requireActivity())
+        newsAdapter = NewsAdapter(requireActivity(), arrayListOf<Article>())
         rvSavedNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

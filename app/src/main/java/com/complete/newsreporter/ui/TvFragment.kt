@@ -39,23 +39,19 @@ class TvFragment : Fragment(R.layout.fragment_tv) {
         binding.iv5.load(R.drawable.gnt)
         binding.cv1.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(TvFragmentDirections.actionTvFragmentToWatchTvFragment(ABP_NEWS))
-            Log.d("taget","clicked")
         }
         binding.cv2.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(TvFragmentDirections.actionTvFragmentToWatchTvFragment(NDTV_NEWS))
-            Log.d("taget","clicked")
         }
         binding.cv3.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(TvFragmentDirections.actionTvFragmentToWatchTvFragment(INDIA_TODAY_NEWS))
-            Log.d("taget","clicked")
         }
         binding.cv4.setOnClickListener {
             Navigation.findNavController(binding.root).navigate(TvFragmentDirections.actionTvFragmentToWatchTvFragment(AAJ_TAK))
-            Log.d("taget","clicked")
         }
         binding.cv5.setOnClickListener {
-            Navigation.findNavController(binding.root).navigate(TvFragmentDirections.actionTvFragmentToWatchTvFragment(GNT_NEWS))
-            Log.d("taget","clicked")
+            Navigation.findNavController(binding.root)
+                .navigate(TvFragmentDirections.actionTvFragmentToWatchTvFragment(GNT_NEWS))
         }
         return binding.root
     }

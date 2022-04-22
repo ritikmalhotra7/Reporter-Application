@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.complete.newsreporter.R
 import com.complete.newsreporter.databinding.FragmentSosBinding
 import com.complete.newsreporter.utils.Constants
@@ -59,6 +61,16 @@ class SosFragment : Fragment(R.layout.fragment_sos) {
             val intent = Intent(Intent.ACTION_DIAL)
             intent.data = Uri.parse("tel:" + fire)
             startActivity(intent)
+        }
+        b.firell.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_sosFragment_to_emergencyFireFragment
+            )
+        }
+        b.medicalll.setOnClickListener {
+            findNavController().navigate(
+                R.id.action_sosFragment_to_emergencyHospitalFragment
+            )
         }
 
         return b.root
