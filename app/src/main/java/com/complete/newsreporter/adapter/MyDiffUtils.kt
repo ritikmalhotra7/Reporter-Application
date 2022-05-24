@@ -3,7 +3,7 @@ package com.complete.newsreporter.adapter
 import androidx.recyclerview.widget.DiffUtil
 import com.complete.newsreporter.model.Article
 
-class MyDiffUtils(
+class   MyDiffUtils(
     private val oldLs:List<Article>,
     private val newLs:List<Article>
 ) : DiffUtil.Callback() {

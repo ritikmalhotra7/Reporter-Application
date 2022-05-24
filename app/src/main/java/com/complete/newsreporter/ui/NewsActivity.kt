@@ -39,7 +39,7 @@ class NewsActivity : AppCompatActivity() {
         bottomNavigationView.menu.get(2).isEnabled = false
         newsNavHostFragment.findNavController().navigate(R.id.breakingNewsFragment)
         bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController())
-        binding.fab.setOnClickListener {
+        fab.setOnClickListener {
            newsNavHostFragment.findNavController().navigate(R.id.searchNewsFragment)
         }
 

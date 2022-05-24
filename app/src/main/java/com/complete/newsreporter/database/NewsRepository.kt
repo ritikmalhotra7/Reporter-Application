@@ -6,7 +6,8 @@ import com.complete.newsreporter.model.Article
 import retrofit2.Retrofit
 
 
-class NewsRepository (val db :ArticleDatabase) {
+class NewsRepository (val db :ArticleDatabase){
+
     suspend fun getBreakingNews(countryCode:String, pageNumber:Int) = RetrofitInstance.api.getBreakingNews(countryCode,pageNumber)
     suspend fun getSearchQuery(searchedQuery:String,pageNumber: Int) = RetrofitInstance.api.searchForNews(searchedQuery,pageNumber)
 
