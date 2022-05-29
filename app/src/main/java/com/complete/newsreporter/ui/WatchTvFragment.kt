@@ -1,5 +1,6 @@
 package com.complete.newsreporter.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_article.*
 class WatchTvFragment : Fragment(R.layout.fragment_watch_tv) {
     val args : WatchTvFragmentArgs by navArgs()
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,6 +28,7 @@ class WatchTvFragment : Fragment(R.layout.fragment_watch_tv) {
         val url = args.urlToWebsite
         b.webView.apply {
             webViewClient = WebViewClient()
+            settings.javaScriptEnabled = true
             loadUrl(url)
             Log.d("taget","this")
         }

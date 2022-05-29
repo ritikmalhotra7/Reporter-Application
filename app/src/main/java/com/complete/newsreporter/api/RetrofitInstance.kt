@@ -1,6 +1,6 @@
 package com.complete.newsreporter.api
 
-import com.complete.newsreporter.utils.Constants.Companion.BASE_URL
+import com.complete.newsreporter.utils.Constants.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.complete.newsreporter.R
 import com.complete.newsreporter.ui.NewsActivity
-import com.complete.newsreporter.utils.Constants.Companion.firebaseAuth
+import com.complete.newsreporter.utils.Constants.firebaseAuth
 import com.google.firebase.auth.FirebaseAuth
 import com.royrodriguez.transitionbutton.TransitionButton
 import kotlinx.android.synthetic.main.fragment_login.*

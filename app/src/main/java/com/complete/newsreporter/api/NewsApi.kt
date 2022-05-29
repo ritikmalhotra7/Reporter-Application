@@ -2,7 +2,8 @@ package com.complete.newsreporter.api
 
 import com.complete.newsreporter.model.NewsResponse
 import com.complete.newsreporter.modelX.SosResponse
-import com.complete.newsreporter.utils.Constants.Companion.API_KEY
+import com.complete.newsreporter.utils.Constants.API_KEY
+import com.complete.newsreporter.utils.Constants.REGION
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -12,7 +13,7 @@ interface NewsApi {
     @GET("v2/top-headlines")
     suspend fun getBreakingNews(
         @Query("country")
-        countryCode : String = "in",
+        countryCode : String,
         @Query("page")
         page:Int = 1,
         @Query("apiKey")

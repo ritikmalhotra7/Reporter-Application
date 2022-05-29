@@ -25,7 +25,6 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as NewsActivity).newsViewModel
 
-        setUpRecyclerView()
         backbutton.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.action_savedNewsFragment_to_settingFragment)
         }
@@ -64,7 +63,6 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         ItemTouchHelper(itemTouchHelper).apply {
             attachToRecyclerView(rvSavedNews)
         }
-
         viewModel.getSavedNews().observe(viewLifecycleOwner, Observer{
             newsAdapter.setList(it)
             if(it.size == 0){
@@ -76,7 +74,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         })
     }
     private fun setUpRecyclerView(){
-        newsAdapter = NewsAdapter(requireActivity(), arrayListOf<Article>())
+        newsAdapter = NewsAdapter(requireActivity())
         rvSavedNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

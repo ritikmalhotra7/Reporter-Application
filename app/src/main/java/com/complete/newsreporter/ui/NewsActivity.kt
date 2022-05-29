@@ -16,6 +16,8 @@ import com.complete.newsreporter.database.ArticleDatabase
 import com.complete.newsreporter.database.NewsRepository
 import com.complete.newsreporter.databinding.ActivityNewsBinding
 import com.complete.newsreporter.utils.Constants
+import com.complete.newsreporter.utils.read
+import com.complete.newsreporter.utils.readPos
 import kotlinx.android.synthetic.main.activity_news.*
 import kotlinx.android.synthetic.main.activity_news.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -37,11 +39,11 @@ class NewsActivity : AppCompatActivity() {
         /*bottomNavigationView.background = null*/
         bottomNavigationView.background = null
         bottomNavigationView.menu.get(2).isEnabled = false
-        newsNavHostFragment.findNavController().navigate(R.id.breakingNewsFragment)
         bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController())
         fab.setOnClickListener {
            newsNavHostFragment.findNavController().navigate(R.id.searchNewsFragment)
         }
+        Constants.setRegion(this, this.readPos("pos"))
 
         /*bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){

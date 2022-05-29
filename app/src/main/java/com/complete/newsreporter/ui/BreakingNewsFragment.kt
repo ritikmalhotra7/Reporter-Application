@@ -23,7 +23,7 @@ import com.complete.newsreporter.database.ArticleDatabase
 import com.complete.newsreporter.database.NewsRepository
 import com.complete.newsreporter.databinding.FragmentBreakingNewsBinding
 import com.complete.newsreporter.model.Article
-import com.complete.newsreporter.utils.Constants.Companion.QUERY_SIZE
+import com.complete.newsreporter.utils.Constants.REGION
 import com.complete.newsreporter.utils.Resources
 import kotlinx.android.synthetic.main.fragment_breaking_news.*
 import kotlinx.coroutines.NonDisposableHandle.parent
@@ -31,6 +31,8 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
+    private var position: Int = 0
+    private var isScrolling: Boolean = false
     lateinit var viewModel:NewsViewModel
     lateinit var newsAdapter : NewsAdapter
 
@@ -39,30 +41,29 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = (activity as NewsActivity).newsViewModel
-        setUpRecyclerView()
 
-
-        viewModel.breakingNews.observe(viewLifecycleOwner, Observer{response->
-             when(response){
-                 is Resources.Success ->{
-                     hideProgressBar()
-                     response.data?.let {newsResponse ->  
-                         newsAdapter.setList(newsResponse.articles.toList())
-                     }
-                 }
-                 is Resources.Error ->{
-                     hideProgressBar()
-                     response.data?.let{
-                         Toast.makeText(requireContext(),"An Error occured $it",Toast.LENGTH_SHORT).show()
-                         Log.d("tagetv","Something is wrong")
-                     }
-                 }
-                 is Resources.Loading ->{
-                     showProgressBar()
-                 }
-             }
-        })
-
+        viewModel.getBreakingNews(REGION)
+        viewModel.breakingNews.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resources.Success -> {
+                    hideProgressBar()
+                    response.data?.let { newsResponse ->
+                        newsAdapter.setList(newsResponse.articles)
+                    }
+                }
+                is Resources.Error -> {
+                    hideProgressBar()
+                    response.data?.let {
+                        Toast.makeText(requireContext(), "An Error occured $it", Toast.LENGTH_SHORT)
+                            .show()
+                        Log.d("tagetv", "Something is wrong")
+                    }
+                }
+                is Resources.Loading -> {
+                    showProgressBar()
+                }
+            }
+        }
     }
     private fun hideProgressBar(){
         avi.hide()
@@ -70,17 +71,40 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     private fun showProgressBar(){
         avi.show()
     }
+    private val onScroll = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+                isScrolling = true
+            }
+        }
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+
+            val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+            val scrolledOutItems = layoutManager.findFirstVisibleItemPosition()
+            val currentItems = layoutManager.childCount
+            val totalItems = layoutManager.itemCount
+
+            if(isScrolling && (currentItems + scrolledOutItems >= totalItems)){
+                viewModel.breakingNewsPage++
+                viewModel.getBreakingNews(REGION)
+                isScrolling = false
+                position = scrolledOutItems
+                Log.d("taget",totalItems.toString())
+            }
+
+        }
+    }
     private fun setUpRecyclerView(){
-        newsAdapter = NewsAdapter(requireActivity(), arrayListOf<Article>())
+        newsAdapter = NewsAdapter(requireActivity())
         rvBreakingNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
-
-            val helper: SnapHelper = LinearSnapHelper()
-            helper.attachToRecyclerView(this)
+            addOnScrollListener(onScroll)
+            scrollToPosition(position)
         }
-
-        newsAdapter.notifyDataSetChanged()
 
         newsAdapter.setOnClickListener {article->
             val bundle = Bundle().apply {

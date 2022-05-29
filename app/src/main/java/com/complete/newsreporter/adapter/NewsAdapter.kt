@@ -19,22 +19,19 @@ import com.complete.newsreporter.databinding.ItemArticlePreviewBinding
 import com.complete.newsreporter.model.Article
 import kotlinx.android.synthetic.main.item_article_preview.view.*
 
-class NewsAdapter(val ctx:Context, var ls :List<Article>) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter(val ctx:Context) : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+    var ls :List<Article> = arrayListOf()
     inner class ArticleViewHolder(val binding: ItemArticlePreviewBinding):RecyclerView.ViewHolder(binding.root) {
-
     }
-    /*private val callback = object : DiffUtil.ItemCallback<Article>(){
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return newItem.url == oldItem.url
-
-        }
-
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return newItem == oldItem
-        }
-
-    }*/
-    /*val differ = AsyncListDiffer(this,callback)*/
+//    private val callback = object : DiffUtil.ItemCallback<Article>(){
+//        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+//            return newItem.url == oldItem.url
+//        }
+//        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+//            return newItem == oldItem
+//        }
+//    }
+//    private val differ = AsyncListDiffer(this,callback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(ItemArticlePreviewBinding.inflate(LayoutInflater.from(parent.context),parent,false))}
@@ -46,7 +43,6 @@ class NewsAdapter(val ctx:Context, var ls :List<Article>) : RecyclerView.Adapter
             ivArticleImage.load(currentArticle.urlToImage){
                 transformations(RoundedCornersTransformation(20F))
                 placeholder(R.drawable.ic_news)
-                crossfade(1000)
             }
 
             iv_share.setOnClickListener(View.OnClickListener {
@@ -54,7 +50,6 @@ class NewsAdapter(val ctx:Context, var ls :List<Article>) : RecyclerView.Adapter
                 intent.putExtra(Intent.EXTRA_TEXT,"Hey, checkout this news : "+currentArticle.url)
                 intent.type = "text/plain"
                 context.startActivity(Intent.createChooser(intent,"Share with :"))
-
             })
             tvSource.text = currentArticle.source?.name
             tvTitle.text = currentArticle.title

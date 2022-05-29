@@ -37,7 +37,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as NewsActivity).newsViewModel
-        setUpRecyclerView(arrayListOf())
+        setUpRecyclerView()
 
 
         var job : Job? = null
@@ -63,7 +63,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                 is Resources.Success ->{
                     hideProgressBar()
                     response.data?.let {newsResponse ->
-                        setUpRecyclerView(newsResponse.articles.toList())
+                        newsAdapter.setList(newsResponse.articles.toList())
                         Log.d("tag",newsResponse.articles.size.toString())
                        }
                 }
@@ -87,8 +87,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     private fun showProgressBar(){
         paginationProgressBarSearched.visibility = View.VISIBLE
     }
-    private fun setUpRecyclerView(ls :List<Article>){
-        newsAdapter = NewsAdapter(requireContext(), ls)
+    private fun setUpRecyclerView(){
+        newsAdapter = NewsAdapter(requireContext())
         rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)

@@ -16,12 +16,13 @@ import com.complete.newsreporter.database.NewsRepository
 import com.complete.newsreporter.model.Article
 import com.complete.newsreporter.model.NewsResponse
 import com.complete.newsreporter.modelX.SosResponse
+import com.complete.newsreporter.utils.Constants.REGION
 import com.complete.newsreporter.utils.Resources
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
 
-class NewsViewModel (app: Application,val repository: NewsRepository):AndroidViewModel(app){
+class NewsViewModel (app: Application, private val repository: NewsRepository):AndroidViewModel(app){
     val breakingNews:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
     var searchedQuery:MutableLiveData<Resources<NewsResponse>> = MutableLiveData()
     val numberReponse:MutableLiveData<Resources<SosResponse>> = MutableLiveData()
@@ -30,10 +31,7 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
     var searchedPageNumber = 1
     var breakingNewsResponse: NewsResponse? =null
     var searchNewsResponse: NewsResponse? =null
-    init{
-        getBreakingNews("in")
-        getSearchedNews("headlines")
-    }
+
     fun getNumber() = viewModelScope.launch {
         numberReponse.postValue(Resources.Loading())
         val numbers = repository.getNumber()
@@ -51,11 +49,13 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
 
     fun getBreakingNews(countryCode:String) = viewModelScope.launch {
         breakingNews.postValue(Resources.Loading())
-        safeBreakingCall(countryCode)
+        val v = repository.getBreakingNews(countryCode,breakingNewsPage)
+        breakingNews.postValue(handleBreakingNewsResponse(v))
     }
     fun getSearchedNews(searchQuery:String) = viewModelScope.launch {
         searchedQuery.postValue(Resources.Loading())
-        safeSearchCall(searchQuery)
+        val v = repository.getSearchQuery(searchQuery,searchedPageNumber)
+        breakingNews.postValue(handleSearchedNewsResponse(v))
     }
     fun getSavedNews() = repository.getAll()
     fun saveNews(article: Article) = viewModelScope.launch {
@@ -71,16 +71,14 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
                 if(breakingNewsResponse == null){
                     breakingNewsResponse = resultResponse
                 }else{
-                    breakingNewsPage++;
                     val oldList = breakingNewsResponse!!.articles
                     val newList = resultResponse.articles
                     oldList.addAll(newList)
                 }
-
                 // breakingNewsResponse ?: resultResponse = this indicates that if
                 // breakingNewsRespponse is not null then it will be returned and
                 // if its null then only resultResponse is returned
-                return Resources.Success(breakingNewsResponse!! )
+                return Resources.Success(breakingNewsResponse?: resultResponse)
                 //?: resultResponse
             }
         }
@@ -94,64 +92,31 @@ class NewsViewModel (app: Application,val repository: NewsRepository):AndroidVie
         }
         return Resources.Error(response.message())
     }
-
-    private suspend fun safeBreakingCall(countryCode:String){
-        try{
-            if(hasConnection()){
-                val response = repository.getBreakingNews(countryCode,breakingNewsPage)
-                breakingNews.postValue(handleBreakingNewsResponse(response))
-            }else{
-                breakingNews.postValue(Resources.Error("No Internet Connection"))
-            }
-        }catch(t:Throwable){
-            when(t){
-                is IOException -> breakingNews.postValue(Resources.Error("Network Failed"))
-                else -> breakingNews.postValue(Resources.Error("conversion error"))
-            }
-        }
-    }
-    private suspend fun safeSearchCall(searchQuery:String){
-
-        searchedQuery.postValue(Resources.Loading())
-        try{
-            if(hasConnection()){
-                val response = repository.getSearchQuery(searchQuery,searchedPageNumber)
-                searchedQuery.postValue(handleSearchedNewsResponse(response))
-            }else{
-                searchedQuery.postValue(Resources.Error("No Internet Connection"))
-            }
-        }catch(t:Throwable){
-            when(t){
-                is IOException -> searchedQuery.postValue(Resources.Error("Network Failed"))
-                else -> searchedQuery.postValue(Resources.Error("conversion error"))
-            }
-        }
-    }
-    private fun hasConnection():Boolean{
-        val connectivityManager = getApplication<NewsApplication>().getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        )as ConnectivityManager
-        if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.M){
-            val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val cababilities = connectivityManager.getNetworkCapabilities(activeNetwork)?:return false
-            return when{
-                cababilities.hasTransport(TRANSPORT_WIFI)->true
-                cababilities.hasTransport(TRANSPORT_CELLULAR)->true
-                cababilities.hasTransport(TRANSPORT_ETHERNET)->true
-                else -> false
-
-            }
-        }else{
-            connectivityManager.activeNetworkInfo?.run {
-                return when(type) {
-
-                    TYPE_WIFI->true
-                    TYPE_MOBILE->true
-                    TYPE_ETHERNET->true
-                    else->false
-                }
-            }
-        }
-        return false
-    }
+//    private fun hasConnection():Boolean{
+//        val connectivityManager = getApplication<NewsApplication>().getSystemService(
+//            Context.CONNECTIVITY_SERVICE
+//        )as ConnectivityManager
+//        if(Build.VERSION.SDK_INT >=  Build.VERSION_CODES.M){
+//            val activeNetwork = connectivityManager.activeNetwork ?: return false
+//            val cababilities = connectivityManager.getNetworkCapabilities(activeNetwork)?:return false
+//            return when{
+//                cababilities.hasTransport(TRANSPORT_WIFI)->true
+//                cababilities.hasTransport(TRANSPORT_CELLULAR)->true
+//                cababilities.hasTransport(TRANSPORT_ETHERNET)->true
+//                else -> false
+//
+//            }
+//        }else{
+//            connectivityManager.activeNetworkInfo?.run {
+//                return when(type) {
+//
+//                    TYPE_WIFI->true
+//                    TYPE_MOBILE->true
+//                    TYPE_ETHERNET->true
+//                    else->false
+//                }
+//            }
+//        }
+//        return false
+//    }
 }

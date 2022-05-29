@@ -1,15 +1,18 @@
 package com.complete.newsreporter.utils
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.complete.newsreporter.model.Situations
+import com.complete.newsreporter.ui.NewsActivity
+import com.complete.newsreporter.ui.SettingFragmentDirections
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 
-class Constants {
-    companion object{
+object Constants {
         const val API_KEY = "d1bd835912d245aaa3bbe7a8af36fdd7"
         const val BASE_URL = "https://newsapi.org"
         const val QUERY_SIZE = 20
@@ -20,11 +23,23 @@ class Constants {
         const val INDIA_TODAY_NEWS = "https://www.indiatoday.in/livetv"
         const val AAJ_TAK = "https://youtu.be/Cy_6-_XUW-c"
         const val GNT_NEWS = "https://www.indiatoday.in/gnt-livetv"
+        const val CNN = "https://www.youtube.com/watch?v=kHSdkpoHXBw&ab_channel=CNN-News18"
+
+        val arr = arrayListOf<String>("in","us","ru","ua","au","cn","es","pk","np","lk")
+        var REGION = arr[0]
+        var pos = 0
 
         var firebaseAuth = FirebaseAuth.getInstance()
         var dbReferenceUsers = FirebaseDatabase.getInstance("https://pocket-news-298cf-default-rtdb.asia-southeast1.firebasedatabase.app/").reference.child("users")
         var storageReference = FirebaseStorage.getInstance().reference
 
+
+        fun setRegion(ctx: Activity,position: Int) {
+            ctx.save("region", arr[position])
+            ctx.save("pos", position.toString())
+            pos = position
+            REGION = ctx.read("region")
+        }
         val medicalSituations = arrayListOf<Situations>(
             Situations("Bleeding","You can start bleeding from even the smallest cut and bruises. But this is not something worth panicking about at that moment. The emergency case arises when it turns into deep cuts and severe bruises that require immediate attention. The condition in which you should seek emergency are:\n" +
                     "\n" +
@@ -33,7 +48,6 @@ class Constants {
                     "You can see your bone or tissue.\n" +
                     "If you delay the process, then the excess loss of blood may lead to dizziness, unwell feeling, pale face, and in some cases, you lose your consciousness. However, if this happens, it is a matter of urgency.")
         )
-
         fun getDate():String{
             val c = Calendar.getInstance()
             val date = c.get(Calendar.DATE)
@@ -43,23 +57,23 @@ class Constants {
 
             return "$date/$month/$year"
         }
-        fun getTime():String{
+        fun getTime():String {
             val c = Calendar.getInstance()
             var hour = c.get(Calendar.HOUR_OF_DAY)
             val minute = c.get(Calendar.MINUTE)
             val seconds = c.get(Calendar.SECOND)
             var timeStamp = ""
             var am = "am"
-            if(minute<10 ){
-                if(hour == 0){
+            if (minute < 10) {
+                if (hour == 0) {
                     hour = 12
                 }
-                if(hour>12){
+                if (hour > 12) {
                     hour -= 12
                     am = "pm"
                 }
                 timeStamp = "$hour:0$minute $am"
-            }else {
+            } else {
                 if (hour == 0) {
                     hour = 12
                 }
@@ -71,15 +85,4 @@ class Constants {
             }
             return timeStamp;
         }
-    }
-    fun saveToSharedPrefrences(key:String,value:String,ctx:Activity){
-        ctx.getSharedPreferences(SHARED, Context.MODE_PRIVATE)?.edit()?.apply{
-            putString(key,value)
-            apply()
-        }
-    }
-    fun getFromSharedPrefrences(key:String,ctx:Activity){
-        ctx.getSharedPreferences(SHARED, Context.MODE_PRIVATE)?.getString(key,"")
-    }
-
 }

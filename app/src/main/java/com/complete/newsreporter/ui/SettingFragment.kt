@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -14,12 +15,18 @@ import androidx.navigation.Navigation
 import com.complete.newsreporter.R
 import com.complete.newsreporter.databinding.FragmentSettingBinding
 import com.complete.newsreporter.utils.Constants
-import com.complete.newsreporter.utils.Constants.Companion.firebaseAuth
+import com.complete.newsreporter.utils.Constants.REGION
+import com.complete.newsreporter.utils.Constants.firebaseAuth
+import com.complete.newsreporter.utils.Constants.pos
+import com.complete.newsreporter.utils.Constants.setRegion
+import com.complete.newsreporter.utils.readPos
 import com.royrodriguez.transitionbutton.TransitionButton
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.android.synthetic.main.fragment_setting.*
 
 class SettingFragment : Fragment(R.layout.fragment_setting) {
+
+    private lateinit var viewModel: NewsViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,6 +36,7 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
         savedInstanceState: Bundle?
     ): View? {
         val b = FragmentSettingBinding.inflate(inflater)
+        viewModel = (activity as NewsActivity).newsViewModel
 
         b.switchNotification.setOnCheckedChangeListener(object:CompoundButton.OnCheckedChangeListener{
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
@@ -49,6 +57,23 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
         }
         b.profile.setOnClickListener {
             Navigation.findNavController(b.root).navigate(R.id.action_settingFragment_to_profileFragment)
+        }
+        b.regionSpinner.setSelection(requireActivity().readPos("pos"))
+        b.regionSpinner.onItemSelectedListener = object:AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                setRegion(requireActivity(), position)
+                viewModel.breakingNewsPage = 1
+                viewModel.searchedPageNumber = 1
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
         }
         b.logoutButton.setOnClickListener {
             b.logoutButton.startAnimation()

@@ -94,6 +94,7 @@
                     android:textSize="16dp" />
 
                 <Spinner
+                    android:id="@+id/regionSpinner"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -154,7 +155,7 @@
                 android:textSize="15dp"
                 android:paddingHorizontal="20dp"
                 android:layout_weight="1"
-                android:textColor="?colorOnPrimary"
+                android:textColor="?colorOnSecondary"
                 app:defaultColor="?colorSecondary"
                 app:loaderColor="@android:color/white" />
 

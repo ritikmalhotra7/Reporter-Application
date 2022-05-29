@@ -14,7 +14,7 @@ import com.complete.newsreporter.adapter.NewsAdapter
 import com.complete.newsreporter.adapter.SituationAdapter
 import com.complete.newsreporter.databinding.FragmentEmergenciesBinding
 import com.complete.newsreporter.model.Article
-import com.complete.newsreporter.utils.Constants.Companion.medicalSituations
+import com.complete.newsreporter.utils.Constants.medicalSituations
 import kotlinx.android.synthetic.main.fragment_breaking_news.*
 import kotlinx.android.synthetic.main.fragment_emergencies.*
 
