@@ -36,7 +36,6 @@ class NewsActivity : AppCompatActivity() {
         val repository :NewsRepository = NewsRepository(ArticleDatabase(this))
         val viewModelFactory = NewsViewModelProviderFactory(application,repository)
         newsViewModel = ViewModelProvider(this,viewModelFactory).get(NewsViewModel::class.java)
-        /*bottomNavigationView.background = null*/
         bottomNavigationView.background = null
         bottomNavigationView.menu.get(2).isEnabled = false
         bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController())
@@ -76,22 +75,6 @@ class NewsActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)*/
-    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 100) {
-            if(data != null){
-                val imageUri = data.data!!
-                Constants.storageReference.child("dp").child(Constants.firebaseAuth.currentUser!!.uid)
-                    .putFile(data.data!!).addOnCompleteListener {
-                        Toast.makeText(this,"saved", Toast.LENGTH_LONG).show()
-                    }
-                imageprofile.setImageURI(imageUri)
-            }else{
-                Toast.makeText(this,"Empty Data", Toast.LENGTH_SHORT).show()
-            }
-
-        }
     }
     private fun setCurrentFragment(fragment : Fragment) : Boolean {
         supportFragmentManager.beginTransaction().apply {

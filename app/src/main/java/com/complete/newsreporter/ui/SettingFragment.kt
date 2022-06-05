@@ -11,14 +11,17 @@ import android.widget.AdapterView
 import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.Navigation
 import com.complete.newsreporter.R
 import com.complete.newsreporter.databinding.FragmentSettingBinding
+import com.complete.newsreporter.model.NewsResponse
 import com.complete.newsreporter.utils.Constants
 import com.complete.newsreporter.utils.Constants.REGION
 import com.complete.newsreporter.utils.Constants.firebaseAuth
 import com.complete.newsreporter.utils.Constants.pos
 import com.complete.newsreporter.utils.Constants.setRegion
+import com.complete.newsreporter.utils.Resources
 import com.complete.newsreporter.utils.readPos
 import com.royrodriguez.transitionbutton.TransitionButton
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -66,6 +69,8 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
                 position: Int,
                 id: Long
             ) {
+                viewModel.breakingNewsResponse = null
+                viewModel.searchNewsResponse = null
                 setRegion(requireActivity(), position)
                 viewModel.breakingNewsPage = 1
                 viewModel.searchedPageNumber = 1

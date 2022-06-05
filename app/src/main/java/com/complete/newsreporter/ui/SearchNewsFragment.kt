@@ -63,8 +63,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                 is Resources.Success ->{
                     hideProgressBar()
                     response.data?.let {newsResponse ->
-                        newsAdapter.setList(newsResponse.articles.toList())
-                        Log.d("tag",newsResponse.articles.size.toString())
+                        newsAdapter.setList(newsResponse.articles!!.toList())
+                        Log.d("tag",newsResponse.articles!!.size.toString())
                        }
                 }
                 is Resources.Error ->{

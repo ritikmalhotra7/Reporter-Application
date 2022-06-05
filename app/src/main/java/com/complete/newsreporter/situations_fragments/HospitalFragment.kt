@@ -1,5 +1,6 @@
 package com.complete.newsreporter.situations_fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,22 +13,22 @@ import androidx.recyclerview.widget.SnapHelper
 import com.complete.newsreporter.R
 import com.complete.newsreporter.adapter.NewsAdapter
 import com.complete.newsreporter.adapter.SituationAdapter
-import com.complete.newsreporter.databinding.FragmentEmergenciesBinding
+import com.complete.newsreporter.databinding.FragmentHospitalEmergenciesBinding
 import com.complete.newsreporter.model.Article
 import com.complete.newsreporter.utils.Constants.medicalSituations
 import kotlinx.android.synthetic.main.fragment_breaking_news.*
-import kotlinx.android.synthetic.main.fragment_emergencies.*
+import kotlinx.android.synthetic.main.fragment_hospital_emergencies.*
 
 
-class EmergenciesFragment : Fragment() {
+class HospitalFragment : Fragment() {
 
-    lateinit var adapter: SituationAdapter
+    lateinit var situationAdapter: SituationAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val b = FragmentEmergenciesBinding.inflate(inflater)
+        val b = FragmentHospitalEmergenciesBinding.inflate(inflater)
         return b.root
     }
 
@@ -35,15 +36,21 @@ class EmergenciesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpRecyclerView()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun setUpRecyclerView(){
-        adapter = SituationAdapter(requireActivity(),medicalSituations )
+        situationAdapter = SituationAdapter(requireActivity(),medicalSituations )
         rv_situations.apply {
-            adapter = adapter
+            adapter = situationAdapter
             layoutManager = LinearLayoutManager(activity)
         }
-
-        adapter.notifyDataSetChanged()
-
+        situationAdapter.notifyDataSetChanged()
+        situationAdapter.onClickListener {situation->
+            val bundle = Bundle().apply {
+                putSerializable("situation",situation)
+            }
+            findNavController().navigate(R.id.action_emergencyHospitalFragment_to_resultFragment,bundle)
+        }
     }
 
 

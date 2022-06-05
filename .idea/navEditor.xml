@@ -180,6 +180,18 @@
                       </LayoutPositions>
                     </value>
                   </entry>
+                  <entry key="resultFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-86" />
+                            <option name="y" value="-1572" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="savedNewsFragment">
                     <value>
                       <LayoutPositions>
@@ -239,6 +251,11 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_settingFragment_to_breakingNewsFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                            <entry key="action_settingFragment_to_loginActivity">
                               <value>
                                 <LayoutPositions />
                               </value>

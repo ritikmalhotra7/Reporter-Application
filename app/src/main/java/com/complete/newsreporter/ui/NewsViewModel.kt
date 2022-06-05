@@ -73,7 +73,7 @@ class NewsViewModel (app: Application, private val repository: NewsRepository):A
                 }else{
                     val oldList = breakingNewsResponse!!.articles
                     val newList = resultResponse.articles
-                    oldList.addAll(newList)
+                    oldList!!.addAll(newList!!)
                 }
                 // breakingNewsResponse ?: resultResponse = this indicates that if
                 // breakingNewsRespponse is not null then it will be returned and

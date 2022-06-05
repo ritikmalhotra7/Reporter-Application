@@ -28,10 +28,10 @@ object Constants {
         val arr = arrayListOf<String>("in","us","ru","ua","au","cn","es","pk","np","lk")
         var REGION = arr[0]
         var pos = 0
-
+        var urlStorage = "https://firebasestorage.googleapis.com/v0/b"
         var firebaseAuth = FirebaseAuth.getInstance()
         var dbReferenceUsers = FirebaseDatabase.getInstance("https://pocket-news-298cf-default-rtdb.asia-southeast1.firebasedatabase.app/").reference.child("users")
-        var storageReference = FirebaseStorage.getInstance().reference
+        var storageReference = FirebaseStorage.getInstance("gs://pocket-news-298cf.appspot.com/")
 
 
         fun setRegion(ctx: Activity,position: Int) {

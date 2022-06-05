@@ -27,6 +27,7 @@ import com.complete.newsreporter.utils.Constants.REGION
 import com.complete.newsreporter.utils.Resources
 import kotlinx.android.synthetic.main.fragment_breaking_news.*
 import kotlinx.coroutines.NonDisposableHandle.parent
+import kotlinx.coroutines.delay
 
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
@@ -40,15 +41,23 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setViews()
+        str.setOnRefreshListener {
+            setViews()
+            str.isRefreshing = false
+        }
+    }
+    private fun setViews(){
         viewModel = (activity as NewsActivity).newsViewModel
-
+        setUpRecyclerView()
         viewModel.getBreakingNews(REGION)
         viewModel.breakingNews.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Success -> {
                     hideProgressBar()
                     response.data?.let { newsResponse ->
-                        newsAdapter.setList(newsResponse.articles)
+                        newsAdapter.setList(newsResponse.articles?: listOf())
+                        Log.d("taget",newsResponse.totalResults.toString())
                     }
                 }
                 is Resources.Error -> {
@@ -60,16 +69,17 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     }
                 }
                 is Resources.Loading -> {
+                    Log.d("taget","hey error")
                     showProgressBar()
                 }
             }
         }
     }
     private fun hideProgressBar(){
-        avi.hide()
+        avi.visibility = View.GONE
     }
     private fun showProgressBar(){
-        avi.show()
+        avi.visibility = View.VISIBLE
     }
     private val onScroll = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -87,14 +97,16 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             val currentItems = layoutManager.childCount
             val totalItems = layoutManager.itemCount
 
-            if(isScrolling && (currentItems + scrolledOutItems >= totalItems)){
-                viewModel.breakingNewsPage++
-                viewModel.getBreakingNews(REGION)
-                isScrolling = false
-                position = scrolledOutItems
-                Log.d("taget",totalItems.toString())
+            if((currentItems + scrolledOutItems == totalItems)){
+               Handler().postDelayed({
+                   viewModel.breakingNewsPage++
+                   viewModel.getBreakingNews(REGION)
+                   isScrolling = false
+                   position = scrolledOutItems
+                   Log.d("taget",totalItems.toString())
+                   Log.d("taget2",viewModel.breakingNewsPage.toString())
+               },1000)
             }
-
         }
     }
     private fun setUpRecyclerView(){

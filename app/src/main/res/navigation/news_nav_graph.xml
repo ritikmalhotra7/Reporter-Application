@@ -101,14 +101,22 @@
     </fragment>
     <fragment
         android:id="@+id/emergencyFireFragment"
-        android:name="com.complete.newsreporter.situations_fragments.ResultFragment"
+        android:name="com.complete.newsreporter.situations_fragments.FireFragment"
         android:label="fragment_emergency_fire"
-        tools:layout="@layout/fragment_result" />
+        tools:layout="@layout/fragment_fire_emergency" >
+        <action
+            android:id="@+id/action_emergencyFireFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+    </fragment>
     <fragment
         android:id="@+id/emergencyHospitalFragment"
-        android:name="com.complete.newsreporter.situations_fragments.EmergenciesFragment"
+        android:name="com.complete.newsreporter.situations_fragments.HospitalFragment"
         android:label="fragment_emergency_hospital"
-        tools:layout="@layout/fragment_emergencies" />
+        tools:layout="@layout/fragment_hospital_emergencies" >
+        <action
+            android:id="@+id/action_emergencyHospitalFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.complete.newsreporter.ui.ProfileFragment"
@@ -118,4 +126,12 @@
         android:id="@+id/loginActivity"
         android:name="com.complete.newsreporter.ui.LoginActivity"
         android:label="LoginActivity" />
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.complete.newsreporter.situations_fragments.ResultFragment"
+        android:label="ResultFragment" >
+        <argument
+            android:name="situation"
+            app:argType="com.complete.newsreporter.model.Situations" />
+    </fragment>
 </navigation>
