@@ -44,6 +44,30 @@ class NewsActivity : AppCompatActivity() {
         }
         Constants.setRegion(this, this.readPos("pos"))
 
+        /*
+        updated code on 15-feb-2024
+        val navController = findNavController(R.id.activity_main_fcv)
+
+        binding.bottomNavigationView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener(object:NavController.OnDestinationChangedListener{
+            override fun onDestinationChanged(
+                controller: NavController,
+                destination: NavDestination,
+                arguments: Bundle?
+            ) {
+                when(destination.id){
+                    R.id.splashFragment -> binding.bottomNavigationView.visibility = View.GONE
+                    R.id.emailLoginFragment -> binding.bottomNavigationView.visibility = View.GONE
+                    R.id.mobileLoginFragment -> binding.bottomNavigationView.visibility = View.GONE
+                    R.id.usernameLoginFragment -> binding.bottomNavigationView.visibility = View.GONE
+                    else -> binding.bottomNavigationView.visibility = View.VISIBLE
+                }
+            }
+        })
+        */
+
+        
         /*bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.breakingNewsFragment -> newsNavHostFragment.findNavController().navigate()
@@ -63,6 +87,7 @@ class NewsActivity : AppCompatActivity() {
             }
             true
         }*/
+        
         /*val navView: BottomNavigationView = binding.bottomNavigationView
 
         val navController = findNavController(R.id.newsNavHostFragment)
